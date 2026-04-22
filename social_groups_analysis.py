@@ -19,15 +19,23 @@ choose_group_menu = """
 
 
 def get_raw_group_analysis(survey_data_filename):
-    menu_option = choose_group_for_analysis()
+    menu_option = choose_option(9, choose_group_menu)
     raw_group_analysis_json = get_data_for_special_group(menu_option, survey_data_filename)
+
     return raw_group_analysis_json
 
 
 def get_processed_group_analysis(survey_data_filename):
-    menu_option = choose_group_for_analysis()
+    menu_option = choose_option(9, choose_group_menu)
+    submenu_option = choose_subgroup_for_analysis(menu_option)
+
+    current_subgroup_translator = get_key_translators()[menu_option]
     processed_group_analysis_json = get_statistics_for_special_group(menu_option, survey_data_filename)
-    return processed_group_analysis_json
+    if submenu_option == len(current_subgroup_translator):
+        return processed_group_analysis_json
+
+    processed_group_analysis_json_items = list(processed_group_analysis_json.items())
+    return processed_group_analysis_json_items[submenu_option]
 
 
 def get_statistics_for_special_group(group_index, survey_data_filename):
@@ -92,15 +100,29 @@ def get_key_translators():
     )
 
 
-def choose_group_for_analysis():
+def choose_subgroup_for_analysis(group_index):
+    if 0 <= group_index <= 8:
+        key_translators = get_key_translators()
+        current_translator = key_translators[group_index]
+
+        submenu = "Выберите подгруппу для анализа:\n"
+        submenu += "\n".join([f'{i}. {value}' for i, value in enumerate(current_translator.values())])
+        submenu += f"\n{len(current_translator)}. Вывести все"
+
+        return choose_option(len(current_translator), submenu)
+
+    return -1
+
+
+def choose_option(max_possible_option, message):
     option_was_inputted = False
-    menu_option = 9
+    menu_option = max_possible_option
 
     while not option_was_inputted:
-        print(choose_group_menu)
+        print(message)
         try:
             menu_option = int(input("Номер опции: "))
-            option_was_inputted = (0 <= menu_option <= 9)
+            option_was_inputted = (0 <= menu_option <= max_possible_option)
 
         except ValueError:
             print("Введите только число - номер опции меню")

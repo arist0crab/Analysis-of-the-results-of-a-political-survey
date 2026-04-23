@@ -76,3 +76,15 @@ publish_opinion_in_media_translater = {
     "write all i want": "Нет, пишу все, что считаю нужным",
     "never say opinion in media": "Я никогда не выражал мнение публично в соцсетях"
 }
+
+TRANSLATOR = {
+    "age": age_translater,
+    "place_of_residence": place_of_residence_translater,
+    "profession": profession_translater,
+    "frequency_of_using_bypass": frequency_of_using_bypass_translater,
+    "blocked_services_using": blocked_services_using_translater,
+    "political_activity_dynamic": political_activity_dynamic_translater,
+    "technical_skills_dynamic": technical_skills_dynamic_translater,
+    "blocks_efficiency_opinion": blocks_efficiency_opinion_translater,
+    "publish_opinion_in_media": publish_opinion_in_media_translater
+}

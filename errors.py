@@ -1,0 +1,1 @@
+NO_SUCH_GROUP_ERROR_TEXT = "Такой группы не существует."

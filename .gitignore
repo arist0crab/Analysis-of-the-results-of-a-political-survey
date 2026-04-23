@@ -1,1 +1,3 @@
 *.json
+plots/
+**/__pycache__/

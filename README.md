@@ -193,3 +193,46 @@ data = get_processed_group_analysis("survey_data.json")
 # В переменной data окажется:
 # {"Moscow": {"age": {"less 18": "5.10%", "18-25": "42.86%", ...}}}
 ```
+
+# visualization_core.py 
+
+Модуль для создания инфографики на основе результатов исследований.
+
+## Основные возможности
+
+- **Donut Chart**: круговая диаграмма.
+
+## Структура и зависимости
+
+Модуль является частью системы анализа опросов и ожидает следующую структуру проекта:
+
+```text
+project_root/
+├── config.py               # Глобальные пути и палитра
+├── main.py                 # Точка входа
+├── errors.py
+└── visualization/
+    └── vizualizator_core.py # Данный модуль
+└── data_processing/
+    ├── parse_primary_json_data.py
+    ├── social_group_analysis.py
+    └── translaters.py
+```
+## Основная точка входа — функция plot_overall_statistics
+
+Она берет данные из JSON, обрабатывает их и генерирует два изображения - круговую диаграмму и легенду к ней.
+
+## Пример использования:
+```python
+from visualization.vizualizator_core import plot_overall_statistics
+
+# Параметры: путь к JSON, ключ категории, имя для файлов
+plot_overall_statistics("results.json", "political_activity_dynamic", "Political_Views")
+```
+
+## Результат работы
+После выполнения в папке, указанной в PLOTS_DIR, появятся файлы:
+
+- Political_Views.png — диаграмма с числовыми индексами и процентами.
+
+- Political_Views_legend.png — текстовая расшифровка индексов.

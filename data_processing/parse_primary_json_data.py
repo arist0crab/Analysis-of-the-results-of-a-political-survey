@@ -1,5 +1,5 @@
 import json
-from translaters import *
+from data_processing.translaters import *
 
 
 def read_base_dict_from_json(survey_data_filename):

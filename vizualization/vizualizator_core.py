@@ -148,7 +148,6 @@ def plot_partial_subgroups_analysis(filename: str) -> None:
     techies_people_data_by_technical_skills = analyze_techies_people_clusters_by_technical_skills(filename)
     opposite_politics_views_data_by_age = analyze_opposite_politics_views_by_age(filename)
 
-    print(humanities_people_data_by_technical_skills)
     draw_histogram(technical_skill_growth_data_by_politics, "political_activity_dynamic", "technical_skill_growth_by_politics", "Рост технических навыков в зависимости от политических взглядов")
     draw_histogram(humanities_people_data_by_technical_skills, "technical_skills_dynamic", "humanities_people_by_technical_skills", "Распределение гуманитариев по техническим навыкам")
     draw_histogram(techies_people_data_by_technical_skills, "technical_skills_dynamic", "techies_people_by_technical_skills", "Распределение технарей по техническим навыкам")

@@ -1,5 +1,5 @@
-from data_processing.translaters import *
-from data_processing.parse_primary_json_data import get_json_data, create_base_empty_dict, load_blank_to_json
+from translaters import *
+from parse_primary_json_data import get_json_data, create_base_empty_dict, load_blank_to_json
 
 
 choose_group_menu = """

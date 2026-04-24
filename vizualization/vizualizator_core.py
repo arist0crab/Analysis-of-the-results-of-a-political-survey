@@ -9,6 +9,7 @@ from config import *
 from errors import *
 from data_processing.translaters import TRANSLATOR
 from data_processing.parse_primary_json_data import read_base_dict_from_json
+from data_processing.partial_subgroups_analysis import *
 
 def build_pie_chart(data: dict, target_group: str) -> tuple[list[str], list[float]]:
     translator = TRANSLATOR.get(target_group)
@@ -106,3 +107,49 @@ def plot_overall_statistics(filename: str, target_group: str, title: str = "") -
         print(NO_SUCH_GROUP_ERROR_TEXT)
         return
     draw_pie_chart(data[target_group], target_group, title)
+
+def build_histogram(data: dict, subgroup: str) -> tuple[list[str], list[float]]:
+    labels = []
+    sizes = []
+    for key, value in data.items():
+        raw_label = TRANSLATOR[subgroup][key]
+        wrapped_label = textwrap.fill(raw_label, width=15)
+        labels.append(wrapped_label)
+        sizes.append(value)
+    return labels, sizes
+
+def draw_histogram(data: dict, subgroup: str, title: str, xlabel: str) -> None:
+    labels, sizes = build_histogram(data, subgroup)
+    ensure_plots_directory()
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    bars = ax.bar(labels, sizes, color=CHART_COLORS[:len(labels)])
+    
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel("Процент респондентов")
+    
+    for bar in bars:
+        height = bar.get_height()
+        ax.annotate(f'{height:.2f}%', 
+                    xy=(bar.get_x() + bar.get_width() / 2, height),
+                    xytext=(0, 3),
+                    textcoords="offset points", 
+                    ha='center', 
+                    va='bottom',
+                    fontsize=10)
+        
+    path = os.path.join(PLOTS_DIR, f"{title}.png")
+    plt.savefig(path, bbox_inches='tight', dpi=300)
+    plt.close(fig)
+
+def plot_partial_subgroups_analysis(filename: str) -> None:
+    technical_skill_growth_data_by_politics = analyze_technical_skill_growth_clusters_by_politics(filename)
+    humanities_people_data_by_technical_skills = analyze_humanities_people_clusters_by_technical_skills(filename)
+    techies_people_data_by_technical_skills = analyze_techies_people_clusters_by_technical_skills(filename)
+    opposite_politics_views_data_by_age = analyze_opposite_politics_views_by_age(filename)
+
+    print(humanities_people_data_by_technical_skills)
+    draw_histogram(technical_skill_growth_data_by_politics, "political_activity_dynamic", "technical_skill_growth_by_politics", "Рост технических навыков в зависимости от политических взглядов")
+    draw_histogram(humanities_people_data_by_technical_skills, "technical_skills_dynamic", "humanities_people_by_technical_skills", "Распределение гуманитариев по техническим навыкам")
+    draw_histogram(techies_people_data_by_technical_skills, "technical_skills_dynamic", "techies_people_by_technical_skills", "Распределение технарей по техническим навыкам")
+    draw_histogram(opposite_politics_views_data_by_age, "age", "opposite_politics_views_by_age", "Распределение противоположных политических взглядов по возрасту")

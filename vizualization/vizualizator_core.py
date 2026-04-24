@@ -3,6 +3,8 @@ import textwrap
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
+from matplotlib.axes import Axes
+from typing import Any
 from config import *
 from errors import *
 from data_processing.translaters import TRANSLATOR
@@ -28,11 +30,9 @@ def prepare_labels(labels: list[str], sizes: list[float]) -> tuple[list[str], li
     colors = CHART_COLORS[:len(sizes)]
     return pie_labels, legend_labels, colors
 
-from matplotlib.axes import Axes
-from typing import Any
 def add_callout_annotations(ax: Axes, wedges: list[Any], sizes: list[float], pie_labels: list[str]) -> None:
     bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
-    kw = dict(arrowprops=dict(arrowstyle="-"), bbox=bbox_props, zorder=0, va="center")
+    kw = dict(arrowprops=dict(arrowstyle="-"), bbox=bbox_props, zorder=0, va="center", fontsize=16)
 
     for i, p in enumerate(wedges):
         angle = (p.theta2 - p.theta1) / 2. + p.theta1

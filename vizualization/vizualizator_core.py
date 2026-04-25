@@ -142,6 +142,42 @@ def draw_histogram(data: dict, subgroup: str, title: str, xlabel: str) -> None:
     plt.savefig(path, bbox_inches='tight', dpi=300)
     plt.close(fig)
 
+def draw_grouped_histogram(data1: dict, data2: dict, subgroup: str, title: str, xlabel: str, labels_groups: tuple = ("Гуманитарии", "Технари")) -> None:
+    labels1, sizes1 = build_histogram(data1, subgroup)
+    labels2, sizes2 = build_histogram(data2, subgroup)
+    
+    ensure_plots_directory()
+    
+    x = np.arange(len(labels1)) 
+    width = 0.35
+
+    fig, ax = plt.subplots(figsize=(12, 7))
+    
+    rects1 = ax.bar(x - width/2, sizes1, width, label=labels_groups[0], color=CHART_COLORS[1])
+    rects2 = ax.bar(x + width/2, sizes2, width, label=labels_groups[1], color=CHART_COLORS[4])
+
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel("Процент респондентов")
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels1, fontsize=9)
+    ax.legend() 
+
+    def autolabel(rects):
+        for rect in rects:
+            height = rect.get_height()
+            ax.annotate(f'{height:.1f}%',
+                        xy=(rect.get_x() + rect.get_width() / 2, height),
+                        xytext=(0, 3),
+                        textcoords="offset points",
+                        ha='center', va='bottom', fontsize=8)
+
+    autolabel(rects1)
+    autolabel(rects2)
+
+    path = os.path.join(PLOTS_DIR, f"{title}.png")
+    plt.savefig(path, bbox_inches='tight', dpi=300)
+    plt.close(fig)
+
 def plot_partial_subgroups_analysis(filename: str) -> None:
     technical_skill_growth_data_by_politics = analyze_technical_skill_growth_clusters_by_politics(filename)
     humanities_people_data_by_technical_skills = analyze_humanities_people_clusters_by_technical_skills(filename)
@@ -149,6 +185,12 @@ def plot_partial_subgroups_analysis(filename: str) -> None:
     opposite_politics_views_data_by_age = analyze_opposite_politics_views_by_age(filename)
 
     draw_histogram(technical_skill_growth_data_by_politics, "political_activity_dynamic", "technical_skill_growth_by_politics", "Рост технических навыков в зависимости от политических взглядов")
-    draw_histogram(humanities_people_data_by_technical_skills, "technical_skills_dynamic", "humanities_people_by_technical_skills", "Распределение гуманитариев по техническим навыкам")
-    draw_histogram(techies_people_data_by_technical_skills, "technical_skills_dynamic", "techies_people_by_technical_skills", "Распределение технарей по техническим навыкам")
+    draw_grouped_histogram(
+        humanities_people_data_by_technical_skills, 
+        techies_people_data_by_technical_skills, 
+        "technical_skills_dynamic", 
+        "comparison_humanities_vs_techies", 
+        "Уровень технических навыков",
+        labels_groups=("Гуманитарии", "Технари")
+    )
     draw_histogram(opposite_politics_views_data_by_age, "age", "opposite_politics_views_by_age", "Распределение противоположных политических взглядов по возрасту")

@@ -1,6 +1,6 @@
-from social_groups_analysis import get_data_for_special_group
-from parse_primary_json_data import create_base_empty_dict, print_json_data_to_terminal, read_base_dict_from_json
-from translaters import TRANSLATOR
+from data_processing.social_groups_analysis import get_data_for_special_group
+from data_processing.parse_primary_json_data import create_base_empty_dict, print_json_data_to_terminal, read_base_dict_from_json
+from data_processing.translaters import TRANSLATOR
 
 def print_all_partial_subgroups_analysis(survey_data_filename):
    print('analyze_technical_skill_growth_clusters_by_politics')
@@ -37,7 +37,7 @@ def get_relative_percents_by_two_signs_clusters(survey_data_filename, major_anal
     all_data_json = read_base_dict_from_json(survey_data_filename)
     minor_analysis_sign_key = list(TRANSLATOR.keys())[minor_analysis_sign_index]
     for subsubgroup in subgroup_data_json.keys():
-        subgroup_data_json[subsubgroup] /= all_data_json[minor_analysis_sign_key][subsubgroup]
+        subgroup_data_json[subsubgroup] = (subgroup_data_json[subsubgroup] / all_data_json[minor_analysis_sign_key][subsubgroup]) * 100
 
     return subgroup_data_json
 
